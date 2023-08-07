@@ -1,5 +1,10 @@
+import { verify } from 'crypto'
 import prisma from '../prisma/prisma.service'
 import bcrypt from 'bcrypt'
+import verifyService from './verify.service'
+import { sendMail } from '../common/mailer.service'
+import forgotPasswordService from './forgot-password.service'
+import createError from 'http-errors'
 
 const register = async (email: string, password: string) => {
   const findedUser = await prisma.user.findUnique({
@@ -8,8 +13,9 @@ const register = async (email: string, password: string) => {
     },
   })
   if (findedUser) {
-    throw new Error('Email has already exists')
+    throw createError(400, 'Email already exists')
   }
+  
   const hashPassword = await bcrypt.hash(password, 10)
   const user = await prisma.user.create({
     data: {
@@ -18,7 +24,15 @@ const register = async (email: string, password: string) => {
       verified: true,
     },
   })
-  return user
+  
+  const verification = await verifyService.createVerification({
+    email,
+    userId: user.id
+  })
+
+  sendMail(email, verification.code)
+
+  return verification
 }
 
 const login = async (email: string, password: string) => {
@@ -29,19 +43,87 @@ const login = async (email: string, password: string) => {
   })
 
   if (!user) {
-    throw new Error('User not found!')
+    throw createError(404, 'User not found')
   }
 
   const compare = await bcrypt.compare(password, user.password)
 
   if (!compare) {
-    throw new Error('Passwrod wrong')
+    throw createError(400, 'Wrong Password')
   }
 
   return user
 }
 
+const verification = async (verificationId: string, code: string) => {
+  const verification = await verifyService.findVerification(verificationId)
+  if(!verification) {
+    throw createError(404, 'Verification not found')
+  }
+
+  const codeIsValid = +code === verification.code
+
+  if(codeIsValid) {
+    const user = await prisma.user.update({
+      where: {
+        id: verification.userId,
+      },
+      data: {
+        verified: true
+      }
+    })
+    return await prisma.user.findUnique({
+      where: {
+        id: verification.userId
+      }
+    })
+  } else {
+    throw createError(400, 'Code not valid')
+  }
+}
+
+const resend = async (email: string, userId: number, verificationId: string) => {
+  const verification = await verifyService.findVerification(verificationId)
+
+  if(verification) {
+    throw createError(400, 'Verification not expired')
+  }
+
+  const newVerification = await verifyService.createVerification({
+    email,
+    userId
+  })
+
+  sendMail(email, newVerification.code)
+
+  return newVerification
+}
+
+const forgotPasswordEmail = async (email: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+      AND: {
+        verified: true
+      }
+    }
+  })
+
+  if(!user) {
+    throw createError(404, 'User not found')
+  }
+
+  const forgotPassword = await forgotPasswordService.createForgotPassword(email)
+  const link = `http://localhost:3000/api/v1/auth/forgot-password/?id=${forgotPassword.id}&code=${forgotPassword.code}&=time=${new Date(forgotPassword.date).getTime()}`
+
+  sendMail(email, link)
+  return forgotPassword
+}
+
 export default {
   register,
   login,
+  verification,
+  resend,
+  forgotPasswordEmail
 }
