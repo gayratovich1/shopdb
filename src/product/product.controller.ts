@@ -4,9 +4,9 @@ import createHttpError from "http-errors";
 
 const createProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const {name, price, description, categoryId} = req.body
+        const { name, price, description, categoryId } = req.body
         const file = req.file
-        if(!file) {
+        if (!file) {
             throw createHttpError(400, 'File not found')
         }
         const product = await productService.createProduct({
@@ -18,11 +18,49 @@ const createProduct = async (req: Request, res: Response, next: NextFunction) =>
             product
         })
     }
+    catch (e) {
+        next(e)
+    }
+}
+
+const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {id} = req.params
+        const {name, price, categoryId, description} = req.body
+        const file = req.file
+
+        const product = await productService.updateProduct(+id , {name, price: +price || price, categoryId: +categoryId || categoryId, description, cover: file?.filename})
+
+        res.send({
+            message: 'Product updated',
+            product
+        })
+    }
+    catch(e) {
+        next(e)
+    }
+}
+
+const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {id} = req.params
+        const {name, price, categoryId, description} = req.body
+        const file = req.file
+
+        const deletedProduct = await productService.deleteProduct(+id)
+
+        res.send({
+            message: 'Product deleted',
+            deletedProduct
+        })
+    }
     catch(e) {
         next(e)
     }
 }
 
 export default {
-    createProduct
+    createProduct,
+    updateProduct,
+    deleteProduct
 }
