@@ -59,8 +59,64 @@ const deleteProduct = async (req: Request, res: Response, next: NextFunction) =>
     }
 }
 
+const getProductById = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params
+
+        const product = await productService.getProductById(+id)
+
+        res.send({
+            message: 'Product',
+            product
+        })
+    }
+    catch(e) {
+        next(e)
+    }
+}
+
+const createImage = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params
+        const file = req.file
+
+        if (!file) {
+            throw createHttpError(404, 'File not found')
+        }
+
+        const image = await productService.createImage(+id, file?.filename)
+
+        res.status(201).send({
+            message: 'Image created',
+            image
+        })
+    }
+    catch(e){
+        next(e)
+    }
+}
+
+const deleteImage = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params
+
+        const image = await productService.deleteImage(+id)
+
+        res.status(201).send({
+            message: 'Image deleted',
+            image
+        })
+    }
+    catch(e){
+        next(e)
+    }
+}
+
 export default {
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductById,
+    createImage,
+    deleteImage
 }

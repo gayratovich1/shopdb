@@ -55,6 +55,27 @@ const getCategoryById = async (id: number) => {
     return _category
 }
 
+const getProductsByCategory = async (id: number) => {
+    const category = await prisma.category.findUnique({
+        where: {
+            id
+        },
+        select: {
+            id: true,
+            name: true,
+            Product: true
+        }
+    })
+    if (!category) {
+        throw createHttpError(404, 'Category not found')
+    }
+
+    return {
+        id: category.id,
+        products: category.Product
+    }
+}
+
 const updateCategory = async (id: number, name: string) => {
     const findedCategory = await prisma.category.findUnique({
         where: {
@@ -102,6 +123,7 @@ export default {
     createCategory,
     getAllCategory,
     getCategoryById,
+    getProductsByCategory,
     updateCategory,
     deleteCategory
 }

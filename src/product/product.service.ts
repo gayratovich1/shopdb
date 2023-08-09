@@ -78,8 +78,65 @@ const deleteProduct = async (id: number,) => {
     return deletedProduct
 }
 
+const getProductById = async (id: number) => {
+    const product = await prisma.product.findUnique({
+        where: {
+            id
+        },
+        select: {
+            id: true,
+            description: true,
+            name: true,
+            cover: true,
+            Image: true,
+            price: true,
+            Rating: true,
+            Detail: true,
+            Review: true
+        }
+    })
+
+    if (!product) {
+        throw createHttpError(404, 'Product not found')
+    }
+
+    return product
+}
+
+const createImage = async (id: number, img: string) => {
+    const image = await prisma.image.create({
+        data: {
+            img,
+            productId: id
+        }
+    })
+    return image
+}
+
+const deleteImage = async (id: number) => {
+    const image = await prisma.image.delete({
+        where: {
+            id
+        }
+    })
+
+    unlink(join(__dirname, '../../uploads', image.img), (err) => {
+        if(err) {
+            console.log('File not deleted', err);
+        }
+        else{
+            console.log('File succesful deleted');
+        }
+    })
+
+    return image
+}
+
 export default {
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductById,
+    createImage,
+    deleteImage
 }
