@@ -112,11 +112,72 @@ const deleteImage = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+const productCreateDetail = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params
+        const { key, value } = req.body
+        
+        const productDetail = await productService.productCreateDetail(
+            +id,
+            key,
+            value,
+        )
+
+        res.status(201).send({
+            message: 'Detail created',
+            productDetail
+        })
+    }
+    catch(e) {
+        next(e)
+    }
+}
+
+const productUpdateDetail = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const { id } = req.params
+        const { key, value } = req.body
+        
+        const productDetail = await productService.productUpdateDetail(
+            +id,
+            key,
+            value
+        )
+
+        res.send({
+            message: 'Detail updated',
+            productDetail
+        })
+    }
+    catch(e){
+        next(e)
+    }
+}
+
+const productDeleteDetail = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params
+
+        const productDetail = await productService.productDeleteDetail(+id)
+
+        res.send({
+            message: 'Detail deleted',
+            productDetail
+        })
+    }
+    catch(e){
+        next(e)
+    }
+}
+
 export default {
     createProduct,
     updateProduct,
     deleteProduct,
     getProductById,
     createImage,
-    deleteImage
+    deleteImage,
+    productCreateDetail,
+    productUpdateDetail,
+    productDeleteDetail
 }

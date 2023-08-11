@@ -7,11 +7,14 @@ import { userVerify } from "../common/user-verify.middleware";
 
 const router = Router()
 
-router.post('/', bodyValidate(createProductScheme.createProductScheme), upload.single('img'), productController.createProduct)
-router.put('/:id', bodyValidate(createProductScheme.updateProductScheme), upload.single('img'), productController.updateProduct)
-router.delete('/:id', upload.single('img'), productController.deleteProduct)
+router.post('/', userVerify(['admin']), upload.single('img'),  bodyValidate(createProductScheme.createProductScheme), productController.createProduct)
+router.put('/:id', userVerify(['admin']), upload.single('img'),  bodyValidate(createProductScheme.updateProductScheme), productController.updateProduct)
+router.delete('/:id', userVerify(['admin']), upload.single('img'), productController.deleteProduct)
 router.get('/:id', productController.getProductById)
 router.post('/:id/image', userVerify(['admin']), upload.single('img'), productController.createImage)
 router.delete('/image/:id', userVerify(['admin']), productController.deleteImage)
+router.post('/:id/detail', userVerify(['admin']), bodyValidate(createProductScheme.createDetailScheme), productController.productCreateDetail)
+router.put('/detail/:id', userVerify(['admin']), bodyValidate(createProductScheme.updateDetailScheme), productController.productUpdateDetail)
+router.delete('/detail/:id', userVerify(['admin']), productController.productDeleteDetail)
 
 export default router

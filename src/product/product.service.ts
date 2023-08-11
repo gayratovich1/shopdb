@@ -132,11 +132,86 @@ const deleteImage = async (id: number) => {
     return image
 }
 
+const productCreateDetail = async (productId: number, key: string, value: string) => {
+    const createDetail = await prisma.detail.create({
+        data: {
+            productId,
+            key,
+            value,
+        }
+    })
+
+    return createDetail
+}
+
+const productUpdateDetail = async (id: number, key?: string, value?: string) => {
+    const findedDetail = await prisma.detail.findUnique({
+        where: {
+            id
+        }
+    })
+
+    if(!findedDetail) {
+        throw createHttpError(404, 'Detail not found')
+    }
+
+    const updateDetail = await prisma.detail.update({
+        where: {
+            id
+        },
+        data: {
+            key,
+            value
+        }
+    })
+
+    return updateDetail
+}
+
+const productDeleteDetail = async (id: number) => {
+    const findedDetail = await prisma.detail.findUnique({
+        where: {
+            id
+        }
+    })
+
+    if(!findedDetail) {
+        throw createHttpError(404, 'Detail not found')
+    }
+
+    const deleteDetail = await prisma.detail.delete({
+        where: {
+            id
+        }
+    })
+
+    return deleteDetail
+}
+
+const createReview = async (productId: number, comment: string, userId: number) => {
+    const createComment = await prisma.review.create({
+        data: {
+            productId,
+            comment,
+            userId
+        }
+    })
+
+    return createComment
+}
+
+const updateComment = async (id: number, comment: string) => {
+    
+}
+
 export default {
     createProduct,
     updateProduct,
     deleteProduct,
     getProductById,
     createImage,
-    deleteImage
+    deleteImage,
+    productCreateDetail,
+    productUpdateDetail,
+    productDeleteDetail
 }
