@@ -257,6 +257,27 @@ const deleteRating = async (id: number) => {
     return delRate
 }
 
+const createSaved = async (id: number, productId: number) => {
+    const saved = await prisma.saved.create({
+        data: {
+            productId,
+            userId: id
+        }
+    })
+
+    return saved
+}
+
+const deleteSaved = async (id: number) => {
+    const saved = await prisma.saved.delete({
+        where: {
+            id
+        }
+    })
+
+    return saved
+}
+
 export default {
     createProduct,
     updateProduct,
@@ -272,5 +293,7 @@ export default {
     deleteReview,
     createRating,
     updateRating,
-    deleteRating
+    deleteRating,
+    createSaved,
+    deleteSaved
 }

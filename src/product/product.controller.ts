@@ -285,6 +285,42 @@ const deleteRating = async (req: Request, res: Response, next: NextFunction) => 
 
     }
 }
+
+const createSaved = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params
+        const {productId} = req.body
+
+        const saved = await productService.createSaved(
+            +id, productId
+        )
+
+        res.status(201).send({
+            message: 'Saved created',
+            saved
+        })
+    }
+    catch(e) {
+        next(e)
+    }
+}
+
+const deleteSaved = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params 
+        const saved = await productService.deleteSaved(
+            +id
+        )
+
+        res.send({
+            message: 'Saved deleted',
+            saved
+        })
+    }
+    catch(e) {
+        next(e)
+    }
+}
   
 export default {
     createProduct,
@@ -301,5 +337,7 @@ export default {
     deleteReview,
     createRating,
     updateRating,
-    deleteRating
+    deleteRating,
+    createSaved,
+    deleteSaved
 }

@@ -22,5 +22,7 @@ router.delete('/review/:id', userVerify(["admin"]), productController.deleteRevi
 router.post('/:id/rating', userVerify(["admin"]), bodyValidate(createProductScheme.rateScheme), productController.createRating)
 router.put('/rating/:id', userVerify(["admin"]), bodyValidate(createProductScheme.updateReviewScheme), productController.updateRating)
 router.delete('/rating/:id', userVerify(["admin"]), productController.deleteRating)
+router.post('/:id/saved', userVerify(["admin"]), productController.createSaved)
+router.delete('/saved/:id', userVerify(["admin"]), productController.deleteSaved)
 
 export default router
