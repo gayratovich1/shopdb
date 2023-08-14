@@ -170,6 +170,122 @@ const productDeleteDetail = async (req: Request, res: Response, next: NextFuncti
     }
 }
 
+const createReview = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {productId, userId} = req.params
+        const {comment} = req.body
+
+        const review = await productService.createReview(
+            +productId,
+            comment,
+            +userId
+        )
+
+            res.status(201).send({
+                message: 'Comment created',
+                review
+            })
+    }
+    catch(e){
+        next(e)
+    }
+}
+
+const updateReview = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params
+        const {comment} = req.body
+
+        const upReview = await productService.updateReview(
+            +id,
+            comment
+        )
+
+        res.send({
+            message: 'Comment updated',
+            upReview
+        })
+    }
+    catch(e) {
+        next(e)
+    }
+}
+
+const deleteReview = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params
+
+        const delReview = await productService.deleteReview(
+            +id
+        )
+
+        res.send({
+            message: 'Comment deleted',
+            delReview
+        })
+    }
+    catch(e) {
+        next(e)
+    }
+}
+
+const createRating = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const user = res.locals.user
+        const {id} = req.params
+        const {rate} = req.body
+
+        const rating = await productService.createRating(
+            user.id, +id, rate
+        )
+
+        res.status(201).send({
+            message: 'Rating created',
+            rating
+        })
+    }
+    catch(e) {
+        next(e)
+    }
+}
+
+const updateRating = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params
+        const {rate} = req.body
+
+        const rating = await productService.updateRating(
+            +id, rate
+        )
+
+        res.send({
+            message: 'Rating updated',
+            rating
+        })
+    }
+    catch(e){
+        next(e)
+    }
+}
+
+const deleteRating = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const {id} = req.params
+
+        const rating = await productService.deleteRating(
+            +id
+        )
+
+        res.send({
+            message: 'Rating deleted',
+            rating
+        })
+    }
+    catch(e) {
+
+    }
+}
+  
 export default {
     createProduct,
     updateProduct,
@@ -179,5 +295,11 @@ export default {
     deleteImage,
     productCreateDetail,
     productUpdateDetail,
-    productDeleteDetail
+    productDeleteDetail,
+    createReview,
+    updateReview,
+    deleteReview,
+    createRating,
+    updateRating,
+    deleteRating
 }

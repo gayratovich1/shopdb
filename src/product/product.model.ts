@@ -21,9 +21,29 @@ const updateDetailScheme = Joi.object({
     value: Joi.string()
 })
 
+const reviewScheme = Joi.object({
+    comment: Joi.string().required() 
+})
+
+const updateReviewScheme = Joi.object({
+    comment: Joi.string()
+})
+
+const rateScheme = Joi.object({
+    rate: Joi.number().required()
+})
+
+const updateRateScheme = Joi.object({
+    rate: Joi.number()
+})
+
 export default {
     createProductScheme,
     updateProductScheme,
     createDetailScheme,
-    updateDetailScheme
+    updateDetailScheme,
+    reviewScheme,
+    updateReviewScheme,
+    rateScheme,
+    updateRateScheme
 }

@@ -200,8 +200,61 @@ const createReview = async (productId: number, comment: string, userId: number) 
     return createComment
 }
 
-const updateComment = async (id: number, comment: string) => {
-    
+const updateReview = async (id: number, comment: string) => {
+    const updateComment = await prisma.review.update({
+        where: {
+            id
+        },
+        data: {
+            comment
+        }
+    })
+
+    return updateComment
+}
+
+const deleteReview = async (id: number) => {
+    const deleteComment = await prisma.review.delete({
+        where: {
+            id
+        }
+    })
+    return deleteComment
+}
+
+const createRating = async (id: number, rate: number, productId: number) => {
+    const createRate = prisma.rating.create({
+        data: {
+            rate,
+            productId,
+            userId: id
+        }
+    })
+
+    return createRate
+}
+
+const updateRating = async (id: number, rate: number) => {
+    const rating = await prisma.rating.update({
+        where: {
+            id
+        },
+        data: {
+            rate
+        }
+    })
+
+    return rating
+}
+
+const deleteRating = async (id: number) => {
+    const delRate = await prisma.rating.delete({
+        where: {
+            id
+        }
+    })
+
+    return delRate
 }
 
 export default {
@@ -213,5 +266,11 @@ export default {
     deleteImage,
     productCreateDetail,
     productUpdateDetail,
-    productDeleteDetail
+    productDeleteDetail,
+    createReview,
+    updateReview,
+    deleteReview,
+    createRating,
+    updateRating,
+    deleteRating
 }
