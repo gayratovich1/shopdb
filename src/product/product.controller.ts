@@ -321,6 +321,64 @@ const deleteSaved = async (req: Request, res: Response, next: NextFunction) => {
         next(e)
     }
 }
+
+const createCart = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const userId = res.locals.user.id
+        const productId = req.body.productId
+        const count = +req.body.count
+
+        const newCart = await productService.createCart(
+            userId,
+            productId,
+            count
+        )
+
+        res.status(201).send({
+            message: 'Cart created',
+            newCart
+        })
+    }
+    catch(e){
+        next(e)
+    }
+}
+
+const getAllCart = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const allCart = await productService.getAllCart()
+
+        res.send({
+            message: 'Retrive all carts',
+            allCart
+        })
+    }
+    catch(e){
+        next(e)
+    }
+}
+
+const deleteCart = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {id} = req.params
+        const foundCart = await productService.findCartById(+id)
+
+        if (!foundCart) {
+            throw createHttpError(400, `Cart not found by id: ${id} or already deleted`)
+        }
+
+        const cart = await productService.deleteCart(
+            +id
+        )
+
+        res.send({
+            message: 'Cart deleted', 
+            cart
+        })
+    } catch (e) {
+        next(e)
+    }
+}
   
 export default {
     createProduct,
@@ -339,5 +397,8 @@ export default {
     updateRating,
     deleteRating,
     createSaved,
-    deleteSaved
+    deleteSaved,
+    createCart,
+    getAllCart,
+    deleteCart
 }
