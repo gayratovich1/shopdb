@@ -114,7 +114,7 @@ model Saved {
 model Cart {
   id        Int     @id @default(autoincrement())
   userId    Int
-  productId Int
+  productId Int     
   count     Int
   Product   Product @relation(fields: [productId], references: [id])
   User      User    @relation(fields: [userId], references: [id])

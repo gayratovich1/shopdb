@@ -14,6 +14,5 @@ router.post('/verification', bodyValidate(registerScheme.verificationScheme), au
 router.post('/resend', bodyValidate(registerScheme.resendScheme), authController.resend)
 router.post('/forgot-password-email', bodyValidate(registerScheme.forgotPasswordEmailScheme), authController.forgotPasswordEmail)
 router.get('/forgot-password', authController.forgotPasswordLink)
-router.use(errorHandler)
 
 export default router

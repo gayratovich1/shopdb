@@ -25,8 +25,4 @@ router.delete('/rating/:id', userVerify(["admin"]), productController.deleteRati
 router.post('/:id/saved', userVerify(["admin"]), productController.createSaved)
 router.delete('/saved/:id', userVerify(["admin"]), productController.deleteSaved)
 
-router.post('/card', userVerify(["user", "admin"]), productController.createCart)
-router.get('/card', userVerify(["user", "admin"]), productController.getAllCart)
-router.delete('/:id', userVerify(["user", "admin"]), productController.deleteCart)
-
 export default router
