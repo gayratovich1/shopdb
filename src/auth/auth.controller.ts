@@ -116,7 +116,7 @@ const forgotPasswordEmail = async (req: Request, resa: Response, next: NextFunct
     const forgotPassword = await authService.forgotPasswordEmail(email)
 
     resa.send({
-      message: `A passwod reset link has been sent to ${email}`
+      message: `A password reset link has been sent to ${email}`
     })
   } catch (e) {
     next(e)
@@ -126,8 +126,17 @@ const forgotPasswordEmail = async (req: Request, resa: Response, next: NextFunct
 const forgotPasswordLink = async (req: Request, res: Response, next: NextFunction) => {
   try{
     const {id, code, time} = req.query
-    console.log(id, code, time);
-    res.send()
+    const { password } = req.body
+
+    if (!id || !code) {
+      throw createHttpError(400, '"id" or "code" not found')
+    }
+    
+    const user = await authService.forgotPasswordLink(id as string, +code, password)
+
+    res.send({
+      message: 'Password updated'
+    })
 
   }catch(e) {
     next(e)
