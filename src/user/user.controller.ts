@@ -5,9 +5,6 @@ const getAllUsers: ControllerType = async (req, res, next) => {
   try {
     const { verified } = req.query
 
-    // verified = "false" | "true"
-    // JSON.parse("false") -> false 
-
     const verifiedBool = verified ? JSON.parse(String(verified)) : undefined
 
     const users = await userService.getAllUser(verifiedBool)
@@ -21,6 +18,49 @@ const getAllUsers: ControllerType = async (req, res, next) => {
   }
 }
 
+const getAllAdmins: ControllerType = async (req, res, next) => {
+  try {
+    const admins = await userService.getAllAdmins()
+
+    res.send({
+      message: 'All Admins',
+      admins,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+const toggleAdmin: ControllerType = async (req, res, next) => {
+  try {
+    const {id} = req.params
+    const admins = await userService.toggleAdmin(+id)
+
+    res.send({
+      message: 'Toggle Admin',
+      admins,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+const deleteUsers: ControllerType = async (req, res, next) => {
+  try {
+    const users = await userService.deleteUsers()
+
+    res.send({
+      message: 'Deleted Users',
+      users,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 export default {
   getAllUsers,
+  getAllAdmins,
+  toggleAdmin,
+  deleteUsers
 }

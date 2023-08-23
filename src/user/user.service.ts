@@ -6,6 +6,16 @@ const getAllUser = async (verified?: boolean) => {
     where: {
       verified,
     },
+    select: {
+      id: true,
+      name: true,
+      surname: true,
+      email: true,
+      phone: true,
+      address: true,
+      role: true,
+      verified: true
+    }
   })
   return users
 }
@@ -15,6 +25,16 @@ const getAllAdmins = async () => {
     where: {
       role: 'admin',
     },
+    select: {
+      id: true,
+      name: true,
+      surname: true,
+      email: true,
+      phone: true,
+      address: true,
+      role: true,
+      verified: true
+    }
   })
   return admins
 }
@@ -37,6 +57,16 @@ const toggleAdmin = async (userId: number) => {
     data: {
       role: user.role === 'user' ? 'admin' : 'user',
     },
+    select: {
+      id: true,
+      name: true,
+      surname: true,
+      email: true,
+      phone: true,
+      address: true,
+      role: true,
+      verified: true
+    }
   })
 
   return toggleUser
