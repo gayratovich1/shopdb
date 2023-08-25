@@ -18,7 +18,7 @@ type UpdateProductType = {
 const createProduct = async (data: CreateProductType) => {
   const product = await prisma.product.create({
     data: {
-      ...data,
+      ...data
     },
   })
   return product
