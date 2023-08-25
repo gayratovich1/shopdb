@@ -32,6 +32,13 @@ enum Role {
   supervisor
 }
 
+enum Role {
+  user
+  admin
+  supervisor
+  none
+}
+
 model Verification {
   id     String   @unique
   userId Int      @unique

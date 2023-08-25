@@ -5,4 +5,24 @@ const registerScheme = Joi.object({
   password: Joi.string().required(),
 })
 
-export default registerScheme
+const verificationScheme = Joi.object({
+  verificationId: Joi.string().required(),
+  code: Joi.string().required()
+})
+
+const resendScheme = Joi.object({
+  verificationId: Joi.string().required(),
+  email: Joi.string().email().required(),
+  userId: Joi.number().required() 
+})
+
+const forgotPasswordEmailScheme = Joi.object({
+  email: Joi.string().email().required()
+})
+
+export default {
+  registerScheme,
+  verificationScheme,
+  resendScheme,
+  forgotPasswordEmailScheme
+}

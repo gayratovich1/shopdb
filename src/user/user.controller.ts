@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { ControllerType } from '../common/types'
 import userService from './user.service'
 
@@ -64,3 +65,27 @@ export default {
   toggleAdmin,
   deleteUsers
 }
+=======
+import { NextFunction, Request, Response } from "express";
+import userSevice from "./user.sevice";
+
+const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {verified} = req.query
+        const verifiedBool = verified ? JSON.parse(String(verified)) : undefined 
+        const users = await userSevice.getAllUsers(verifiedBool)
+
+        res.send({
+            message: 'All Users',
+            users
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+
+export default {
+    getAllUsers
+}
+>>>>>>> b8cf0d176ec22c7ba4185b2bb7e1dfa2c6ea1793

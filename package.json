@@ -14,6 +14,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+<<<<<<< HEAD
+=======
+    "fs": "^0.0.1-security",
+>>>>>>> b8cf0d176ec22c7ba4185b2bb7e1dfa2c6ea1793
     "http-errors": "^2.0.0",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.1",
