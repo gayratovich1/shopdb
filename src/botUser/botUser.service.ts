@@ -32,6 +32,27 @@ const createBotUser = async (userId: number, telegramId: number) => {
   return botUser
 }
 
+const deleteBotUser = async (userId: number,) => {
+  const findedUser = await prisma.user.findUnique({
+    where: {
+      id: userId
+    }
+  })
+
+  if (!findedUser) {
+    throw createHttpError(404, 'User not found')
+  }
+
+  const deleteUser = await prisma.user.delete({
+    where: {
+      id: userId
+    }
+  })
+
+  return deleteUser
+}
+
 export default {
   createBotUser,
+  deleteBotUser
 }

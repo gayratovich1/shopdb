@@ -16,6 +16,22 @@ const createBotUser: ControllerType = async (req, res, next) => {
   }
 }
 
+const deleteBotUser: ControllerType = async (req, res, next) => {
+  try {
+    const {userId} = res.locals.user.id
+
+    const deleteUser = await botUserService.deleteBotUser(+userId)
+
+    res.send({
+      message: 'Bot User deleted',
+      deleteUser
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 export default {
   createBotUser,
+  deleteBotUser
 }
