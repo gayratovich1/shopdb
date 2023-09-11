@@ -114,9 +114,8 @@ const forgotPasswordEmail = async (email: string) => {
 
   const forgotPassword = await forgotPasswordService.createForgotPassword(email)
 
-  const link = `http://localhost:3000/api/v1/auth/forgot-password/?id=${
-    forgotPassword.id
-  }&code=${forgotPassword.code}&time=${new Date(forgotPassword.date).getTime()}`
+  const link = `http://localhost:3000/api/v1/auth/forgot-password/?id=${forgotPassword.id
+    }&code=${forgotPassword.code}&time=${new Date(forgotPassword.date).getTime()}`
 
   sendMail(email, link)
 
